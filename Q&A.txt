@@ -102,6 +102,77 @@ PIVOT
 (MAX(name) FOR occupation IN ('Doctor' as Doctor,'Professor' as Professor, 'Singer' as Singer, 'Actor' as Actor)) 
 ORDER BY rn;
 
+12. Samantha was tasked with calculating the average monthly salaries for all employees in the EMPLOYEES table, but did not realize her keyboard's  key was broken until after completing the calculation. She wants your help finding the difference between her miscalculation (using salaries with any zeros removed), and the actual average salary.
+
+Write a query calculating the amount of error (i.e.actual miscalculated :   average monthly salaries), and round it up to the next integer.
+
+
+
+13. We define an employee's total earnings to be their monthly  worked, and the maximum total earnings to be the maximum total earnings for any employee in the Employee table. Write a query to find the maximum total earnings for all employees as well as the total number of employees who have maximum total earnings. Then print these values as  space-separated integers.
+
+
+solution 1
+select max_salary, count(*) from (
+select * from(
+select max(salary*months) as MAX_SALARY, employee_id from Employee group by employee_id)
+where MAX_SALARY= (select max(salary*months)  from Employee))
+where MAX_SALARY= (select max(salary*months)  from Employee)
+group by MAX_SALARY;
+
+
+solution 2
+
+select max_salary, count(c_emp) from(
+select max(salary*months) as MAX_SALARY, count(employee_id) c_emp
+from Employee group by employee_id)
+where max_salary =( select max(salary*months) from Employee )
+
+
+solution 3
+
+select max_salary, count(c_emp) from(
+select max(salary*months) as MAX_SALARY, count(employee_id) c_emp
+from Employee 
+group by employee_id 
+having max(salary*months) = (select max(salary*months) from Employee))
+group by max_salary;
+
+
+14. Consider P1(a,b) and P2(c,d) to be two points on a 2D plane.
+
+a happens to equal the minimum value in Northern Latitude (LAT_N in STATION).
+b happens to equal the minimum value in Western Longitude (LONG_W in STATION).
+c happens to equal the maximum value in Northern Latitude (LAT_N in STATION).
+c happens to equal the maximum value in Western Longitude (LONG_W in STATION).
+Query the Manhattan Distance between points and and round it to a scale of decimal places.
+
+solution 1:
+select ROUND(ABS(MAX(LAT_N) - MIN(LAT_N)) + ABS(MAX(LONG_W) - MIN(LONG_W)), 4) FROM STATION;
+
+
+15.
+Consider P1(a, c) and P2(b,d) to be two points on a 2D plane where a, c are the respective minimum and maximum values of Northern Latitude (LAT_N) and b, d are the respective minimum and maximum values of Western Longitude (LONG_W) in STATION.
+
+Query the Euclidean Distance between points and and format your answer to display decimal digits.
+
+
+SOLUTION: Euclidean Distance
+d = √[(x2 – x1)2 + (y2 – y1)2]
+select  round(sqrt((power((max(lat_n)-min(lat_n)),2) + power((max(long_w)-min(long_w)),2))),4) from station ;
+
+
+16.
+A median is defined as a number separating the higher half of a data set from the lower half. Query the median of the Northern Latitudes (LAT_N) from STATION and round your answer to 4 decimal places.
+
+
+select ROUND(median(LAT_N),4)   from STATION ;
+
+
+
+
+
+
+
 
 
 
